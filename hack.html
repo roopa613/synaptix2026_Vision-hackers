@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMatch AI - Next-Gen Explainable Matching Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Dynamic Background */
+        .aurora-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: aurora 15s ease infinite;
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-dark {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 3D Card Effects */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-3d {
+            transform-style: preserve-3d;
+        }
+        
+        .card-3d {
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+        }
+        
+        /* Neural Network Animation */
+        .neural-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: pulse-node 2s infinite;
+        }
+        
+        @keyframes pulse-node {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+        
+        .neural-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4f46e5, transparent);
+            animation: data-flow 3s linear infinite;
+        }
+        
+        @keyframes data-flow {
+            0% { opacity: 0; transform: translateX(-100%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+        
+        /* Holographic Effect */
+        .holographic {
+            background: linear-gradient(135deg, 
+                rgba(255,0,0,0.1) 0%, 
+                rgba(0,255,0,0.1) 25%, 
+                rgba(0,0,255,0.1) 50%, 
+                rgba(255,0,255,0.1) 75%, 
+                rgba(255,255,0,0.1) 100%);
+            background-size: 200% 200%;
+            animation: holographic-shift 3s ease infinite;
+        }
+        
+        @keyframes holographic-shift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 200%; }
+        }
+        
+        /* Skill Constellation */
+        .constellation-line {
+            stroke: #4f46e5;
+            stroke-width: 1;
+            opacity: 0.3;
+            animation: constellation-pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes constellation-pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Blockchain Verification Badge */
+        .blockchain-badge {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #0f3460;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blockchain-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: blockchain-shine 3s infinite;
+        }
+        
+        @keyframes blockchain-shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* AI Thinking Animation */
+        .ai-thinking {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .ai-thinking span {
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: ai-bounce 1.4s ease-in-out infinite both;
+        }
+        
+        .ai-thinking span:nth-child(1) { animation-delay: -0.32s; }
+        .ai-thinking span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes ai-bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 4px;
+        }
+        
+        /* Floating Elements */
+        .float {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Gradient Text Animation */
+        .gradient-text-animated {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #db2777, #4f46e5);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        
+        /* Interactive Heatmap */
+        .skill-heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .heat-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .heat-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        /* Voice Wave Animation */
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+        }
+        
+        .voice-bar {
+            width: 4px;
+            background: #4f46e5;
+            border-radius: 2px;
+            animation: voice-animation 1s ease-in-out infinite;
+        }
+        
+        .voice-bar:nth-child(1) { height: 20%; animation-delay: 0s; }
+        .voice-bar:nth-child(2) { height: 60%; animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { height: 100%; animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { height: 60%; animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { height: 20%; animation-delay: 0.4s; }
+        
+        @keyframes voice-animation {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+        
+        /* AR Preview Container */
+        .ar-preview {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .ar-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        
+        /* Predictive Text Cursor */
+        .predictive-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #4f46e5;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* NFT Certificate Style */
+        .nft-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nft-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        /* Biometric Glow */
+        .biometric-active {
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.6);
+            animation: biometric-pulse 2s infinite;
+        }
+        
+        @keyframes biometric-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.8), 0 0 60px rgba(124, 58, 237, 0.4); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+    <!-- Dynamic Background Canvas -->
+    <canvas id="neural-canvas" class="fixed inset-0 z-0 opacity-30 pointer-events-none"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="glass-panel fixed w-full z-50 border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg holographic">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-display font-bold gradient-text-animated">SkillMatch AI</span>
+                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Neural Engine Active
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-1 bg-white/50 rounded-2xl p-1">
+                    <button onclick="switchTab('dashboard')" class="nav-tab tab-active px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2" data-tab="dashboard">
+                        <i class="fas fa-home"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('matching')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="matching">
+                        <i class="fas fa-brain"></i> AI Matching
+                    </button>
+                    <button onclick="switchTab('metaverse')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="metaverse">
+                        <i class="fas fa-vr-cardboard"></i> MetaVerse
+                    </button>
+                    <button onclick="switchTab('credentials')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="credentials">
+                        <i class="fas fa-fingerprint"></i> Credentials
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-white/60 rounded-2xl border border-white/40">
+                        <div class="voice-wave">
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">AI Listening...</span>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold cursor-pointer biometric-active">
+                            JD
+                        </div>
+                        <div class="absolute right-0 mt-2 w-64 glass-panel rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right">
+                            <div class="p-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold">JD</div>
+                                    <div>
+                                        <p class="font-bold text-gray-800">John Doe</p>
+                                        <p class="text-xs text-gray-500">Blockchain Verified</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Trust Score</span>
+                                        <span class="font-bold text-green-600">98.4%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">NFT Badges</span>
+                                        <span class="font-bold text-indigo-600">12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content space-y-8">
+            <!-- Hero with 3D Elements -->
+            <div class="relative rounded-3xl overflow-hidden min-h-[500px] flex items-center">
+                <div class="absolute inset-0 aurora-bg opacity-90"></div>
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+                
+                <div class="relative z-10 w-full p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/30">
+                                <i class="fas fa-sparkles"></i>
+                                <span>Quantum-Enhanced Matching v2.0</span>
+                            </div>
+                            <h1 class="text-5xl md:text-7xl font-display font-bold text-white leading-tight">
+                                Your Skills,<br>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">Decentralized</span><br>
+                                Future
+                            </h1>
+                            <p class="text-xl text-white/90 max-w-lg">
+                                AI-powered, blockchain-verified, metaverse-ready career matching with neural explainability.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="switchTab('matching')" class="group px-8 py-4 bg-white text-indigo-600 rounded-2xl font-bold text-lg hover:bg-indigo-50 transition-all duration-300 flex items-center gap-3 shadow-2xl hover:shadow-white/25 hover:scale-105">
+                                    <span>Explore Matches</span>
+                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                                <button class="px-8 py-4 bg-white/10 backdrop-blur-md text-white rounded-2xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-300 flex items-center gap-3">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Watch Demo</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 3D Skill Constellation -->
+                        <div class="relative h-[400px] hidden lg:block">
+                            <div id="skill-constellation" class="absolute inset-0">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-32 h-32 rounded-full bg-white/10 backdrop-blur-xl border border-white/30 flex items-center justify-center float">
+                                    <i class="fas fa-user-astronaut text-6xl text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                                <i class="fas fa-bolt text-yellow-500"></i>
+                                Neural Match Feed
+                            </h3>
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold animate-pulse">LIVE</span>
+                            </div>
+                        </div>
+                        <div id="live-feed" class="space-y-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Skill Heatmap -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Skill Development Heatmap</h3>
+                        <div class="flex gap-6">
+                            <div id="skill-heatmap" class="skill-heatmap flex-1">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="w-48 space-y-3">
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-900 rounded"></div>
+                                    <span class="text-gray-600">Expert</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-600 rounded"></div>
+                                    <span class="text-gray-600">Advanced</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-400 rounded"></div>
+                                    <span class="text-gray-600">Intermediate</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-200 rounded"></div>
+                                    <span class="text-gray-600">Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gamification Sidebar -->
+                <div class="space-y-6">
+                    <!-- NFT Achievement Card -->
+                    <div class="nft-card rounded-3xl p-6 text-white shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-white/80 text-sm font-medium">Achievement Unlocked</p>
+                                    <h3 class="text-2xl font-bold">Skill Pioneer</h3>
+                                </div>
+                                <i class="fas fa-trophy text-3xl text-yellow-300"></i>
+                            </div>
+                            <div class="w-full h-32 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4 overflow-hidden relative">
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-pink-500/20"></div>
+                                <i class="fas fa-medal text-6xl text-yellow-300 relative z-10 float"></i>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-white/70">Token ID</p>
+                                    <p class="font-mono text-sm">#SKILL-7842</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-white/70">Rarity</p>
+                                    <p class="font-bold text-yellow-300">Legendary</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Companion -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl relative">
+                                <i class="fas fa-robot"></i>
+                                <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Astra AI</h3>
+                                <p class="text-sm text-gray-500">Your Career Copilot</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3 mb-4">
+                            <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                                <p class="text-sm text-gray-700">"I noticed 3 new blockchain opportunities matching your profile. Shall I analyze them?"</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="flex-1 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Analyze</button>
+                            <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">Later</button>
+                        </div>
+                    </div>
+
+                    <!-- Staking Rewards -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-coins text-yellow-500"></i>
+                            Skill Staking
+                        </h3>
+                        <div class="text-center mb-4">
+                            <p class="text-4xl font-bold text-indigo-600">2,450</p>
+                            <p class="text-sm text-gray-500">SKL Tokens Earned</p>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center">75% to next reward tier</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Matching Tab -->
+        <div id="matching" class="tab-content hidden space-y-8">
+            <!-- Quantum Control Panel -->
+            <div class="glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-display font-bold text-gray-800 mb-2">Quantum Matching Engine</h2>
+                        <p class="text-gray-600">Adjust neural parameters to customize your opportunity universe</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="activateQuantumMode()" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-purple-500/30 transition-all flex items-center gap-2 group">
+                            <i class="fas fa-atom group-hover:rotate-180 transition-transform duration-500"></i>
+                            Quantum Boost
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multi-Dimensional Sliders -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-code text-indigo-500"></i>
+                                Technical
+                            </label>
+                            <span id="tech-val" class="text-lg font-bold text-indigo-600">40%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" min="0" max="100" value="40" oninput="updateQuantumWeights('tech', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="tech-bar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-project-diagram text-purple-500"></i>
+                                Experience
+                            </label>
+                            <span id="exp-val" class="text-lg font-bold text-purple-600">35%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600" min="0" max="100" value="35" oninput="updateQuantumWeights('exp', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="exp-bar" class="h-full bg-purple-500 transition-all duration-300" style="width: 35%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-brain text-pink-500"></i>
+                                Domain
+                            </label>
+                            <span id="domain-val" class="text-lg font-bold text-pink-600">25%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-pink-600" min="0" max="100" value="25" oninput="updateQuantumWeights('domain', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="domain-bar" class="h-full bg-pink-500 transition-all duration-300" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-balance-scale text-green-500"></i>
+                                Fairness
+                            </label>
+                            <span id="fair-val" class="text-lg font-bold text-green-600">Auto</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleFairnessMode()" id="fairness-toggle" class="flex-1 py-2 bg-green-100 text-green-700 rounded-xl text-sm font-bold hover:bg-green-200 transition">
+                                Active
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500">Ensures equitable opportunity distribution</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holographic Match Cards -->
+            <div id="quantum-matches" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- MetaVerse Tab -->
+        <div id="metaverse" class="tab-content hidden space-y-8">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-display font-bold gradient-text-animated mb-4">MetaVerse Career Hub</h2>
+                <p class="text-xl text-gray-600">Step into immersive interviews and virtual office tours</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- VR Office Tour -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-building text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Virtual Office Tours</h3>
+                        <p class="text-center text-white/80 mb-4">Experience company culture in VR before applying</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            Enter VR
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Avatar Interview -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-600 to-orange-500"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-user-tie text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">AI Avatar Practice</h3>
+                        <p class="text-center text-white/80 mb-4">Practice interviews with AI hiring managers</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            Start Session
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NFT Portfolio Gallery -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-teal-600"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-palette text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">NFT Portfolio</h3>
+                        <p class="text-center text-white/80 mb-4">Showcase verified projects as digital assets</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AR Preview Section -->
+            <div class="glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                    <i class="fas fa-glasses text-indigo-600"></i>
+                    AR Workspace Preview
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="ar-preview h-64 bg-gray-900 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                            <i class="fas fa-cube text-6xl text-gray-700 group-hover:text-indigo-500 transition-colors"></i>
+                        </div>
+                        <div class="ar-overlay">
+                            <div class="text-white">
+                                <p class="font-bold text-lg">TechCorp HQ</p>
+                                <p class="text-sm text-white/70">Your future desk: Floor 12, Window View</p>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-green-500/80 backdrop-blur-md rounded-full text-xs font-bold text-white">
+                            <i class="fas fa-eye mr-1"></i> AR Active
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-map-marker-alt text-red-500"></i>
+                                <span class="font-semibold text-gray-800">Location</span>
+                            </div>
+                            <p class="text-gray-600">San Francisco, CA • 0.8 miles from your preference</p>
+                        </div>
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-users text-blue-500"></i>
+                                <span class="font-semibold text-gray-800">Team Size</span>
+                            </div>
+                            <p class="text-gray-600">12 engineers • 3 mentors assigned</p>
+                        </div>
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-coffee text-orange-500"></i>
+                                <span class="font-semibold text-gray-800">Amenities</span>
+                            </div>
+                            <div class="flex gap-2 flex-wrap">
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">☕ Free Coffee</span>
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">🏋️ Gym</span>
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">🎮 Game Room</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credentials Tab -->
+        <div id="credentials" class="tab-content hidden space-y-8">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-display font-bold gradient-text-animated mb-4">Blockchain Credentials</h2>
+                <p class="text-xl text-gray-600">Immutable, verifiable, owned by you</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Identity Card -->
+                <div class="lg:col-span-1">
+                    <div class="blockchain-badge rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-3xl">
+                                    <i class="fas fa-fingerprint"></i>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-white/60">DID</p>
+                                    <p class="font-mono text-sm">did:skill:0x7f8a...3d2e</p>
+                                </div>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-1">John Doe</h3>
+                            <p class="text-white/70 mb-6">Full Stack Developer</p>
+                            
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">Trust Score</span>
+                                    <span class="font-bold text-green-400">98.4%</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">Verifications</span>
+                                    <span class="font-bold">24</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">NFT Badges</span>
+                                    <span class="font-bold text-yellow-400">12</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="flex-1 py-3 bg-white/10 backdrop-blur-md rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-qrcode"></i>
+                                    Show QR
+                                </button>
+                                <button class="flex-1 py-3 bg-white/10 backdrop-blur-md rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-share-alt"></i>
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credential Wallet -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Verified Credentials</h3>
+                            <button class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition flex items-center gap-2">
+                                <i class="fas fa-plus"></i>
+                                Add New
+                            </button>
+                        </div>
+
+                        <div class="space-y-4" id="credential-list">
+                            <!-- Blockchain Verified Degree -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-green-200 hover:border-green-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/10 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center text-green-600 text-2xl">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">B.S. Computer Science</h4>
+                                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-bold">
+                                                <i class="fas fa-link mr-1"></i>On-Chain
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Stanford University • 2023</p>
+                                        <p class="text-xs text-gray-400 font-mono mt-1">0x8f72...9a1b • Verified 2 days ago</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NFT Skill Badge -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-purple-400/0 via-purple-400/10 to-purple-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 text-2xl">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">Advanced React Certification</h4>
+                                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-bold">
+                                                <i class="fas fa-gem mr-1"></i>NFT
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Meta • Issued 2024</p>
+                                        <p class="text-xs text-gray-400 font-mono mt-1">Token ID: #REACT-8842 • Rare</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <i class="fas fa-gem text-2xl text-purple-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Biometric Verification -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/10 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 text-2xl biometric-active">
+                                        <i class="fas fa-fingerprint"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">Biometric Identity</h4>
+                                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-bold">
+                                                <i class="fas fa-shield-alt mr-1"></i>Live
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Facial + Voice + Behavioral</p>
+                                        <p class="text-xs text-gray-400 mt-1">Last verified: Just now</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zero-Knowledge Proof Section -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-user-secret text-indigo-600"></i>
+                            Zero-Knowledge Proofs
+                        </h3>
+                        <p class="text-gray-600 mb-4">Prove qualifications without revealing sensitive data</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-dollar-sign text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">Salary Range</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove you're in range without revealing exact amount</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-award text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">GPA Threshold</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove 3.5+ GPA without showing transcript</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">Experience Years</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove 2+ years without revealing dates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quantum Apply Modal -->
+    <div id="quantum-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeQuantumModal()"></div>
+        <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl transform scale-95 opacity-0 transition-all duration-500" id="quantum-modal-content">
+            <button onclick="closeQuantumModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                <i class="fas fa-times text-gray-600"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl relative">
+                    <i class="fas fa-paper-plane"></i>
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 animate-ping opacity-30"></div>
+                </div>
+                <h3 class="text-3xl font-display font-bold text-gray-800 mb-2">Quantum Application Submitted</h3>
+                <p class="text-gray-600">Your application is now encrypted and distributed across the network</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="flex items-center gap-4 p-4 bg-green-50 rounded-xl border border-green-200">
+                    <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">Blockchain Notarized</p>
+                        <p class="text-sm text-gray-600">Tx Hash: 0x7f8a...3d2e</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <i class="fas fa-fingerprint text-2xl text-blue-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">Biometric Verified</p>
+                        <p class="text-sm text-gray-600">Identity confirmed via ZK-proof</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <i class="fas fa-brain text-2xl text-purple-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">AI Match Score</p>
+                        <p class="text-sm text-gray-600">94% compatibility recorded on-chain</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="closeQuantumModal()" class="flex-1 py-4 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition">Close</button>
+                <button class="flex-1 py-4 gradient-bg text-white rounded-2xl font-bold hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-chart-line"></i>
+                    Track Status
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Neural Network Background Animation
+        function initNeuralBackground() {
+            const canvas = document.getElementById('neural-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const nodes = [];
+            const nodeCount = 50;
+
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+
+                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(79, 70, 229, 0.3)';
+                    ctx.fill();
+                });
+
+                nodes.forEach((node, i) => {
+                    nodes.slice(i + 1).forEach(other => {
+                        const dist = Math.hypot(node.x - other.x, node.y - other.y);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(node.x, node.y);
+                            ctx.lineTo(other.x, other.y);
+                            ctx.strokeStyle = `rgba(79, 70, 229, ${0.1 * (1 - dist/150)})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Skill Constellation
+        function initSkillConstellation() {
+            const container = document.getElementById('skill-constellation');
+            const skills = ['React', 'Python', 'AI', 'Cloud', 'Data', 'UX', 'Node', 'Go'];
+            const colors = ['#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#059669', '#0891b2', '#4f46e5', '#7c3aed'];
+            
+            skills.forEach((skill, i) => {
+                const angle = (i / skills.length) * Math.PI * 2;
+                const radius = 120;
+                const x = Math.cos(angle) * radius + 150;
+                const y = Math.sin(angle) * radius + 150;
+                
+                const node = document.createElement('div');
+                node.className = 'absolute px-4 py-2 rounded-full text-white text-sm font-bold shadow-lg transform hover:scale-110 transition-transform cursor-pointer';
+                node.style.backgroundColor = colors[i];
+                node.style.left = x + 'px';
+                node.style.top = y + 'px';
+                node.textContent = skill;
+                
+                // Add connecting line
+                const line = document.createElement('div');
+                line.className = 'absolute h-px bg-white/20 origin-left';
+                line.style.width = radius + 'px';
+                line.style.left = '150px';
+                line.style.top = '150px';
+                line.style.transform = `rotate(${angle}rad)`;
+                
+                container.appendChild(line);
+                container.appendChild(node);
+            });
+        }
+
+        // Live Feed Simulation
+        function initLiveFeed() {
+            const feed = document.getElementById('live-feed');
+            const actions = [
+                { icon: 'fa-bolt', color: 'yellow', text: 'New AI match found for', sub: 'Machine Learning Engineer @ Google' },
+                { icon: 'fa-check-circle', color: 'green', text: 'Blockchain verification complete', sub: 'Credential: AWS Solutions Architect' },
+                { icon: 'fa-trophy', color: 'purple', text: 'Achievement unlocked', sub: 'Applied to 10 opportunities!' },
+                { icon: 'fa-coins', color: 'yellow', text: 'Earned 50 SKL tokens', sub: 'For completing profile verification' }
+            ];
+
+            function addFeedItem() {
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-white/60 transform translate-x-full opacity-0 transition-all duration-500';
+                item.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-${action.color}-100 flex items-center justify-center text-${action.color}-500">
+                        <i class="fas ${action.icon}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 text-sm">${action.text}</p>
+                        <p class="text-xs text-gray-500">${action.sub}</p>
+                    </div>
+                    <span class="text-xs text-gray-400">Just now</span>
+                `;
+                
+                feed.insertBefore(item, feed.firstChild);
+                if (feed.children.length > 4) feed.lastChild.remove();
+                
+                setTimeout(() => {
+                    item.classList.remove('translate-x-full', 'opacity-0');
+                }, 100);
+            }
+
+            setInterval(addFeedItem, 3000);
+            addFeedItem();
+        }
+
+        // Skill Heatmap
+        function initSkillHeatmap() {
+            const container = document.getElementById('skill-heatmap');
+            const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
+            
+            for (let i = 0; i < 28; i++) {
+                const cell = document.createElement('div');
+                const level = levels[Math.floor(Math.random() * levels.length)];
+                cell.className = 'heat-cell';
+                cell.style.backgroundColor = `rgba(79, 70, 229, ${level})`;
+                cell.title = `Activity Level: ${Math.round(level * 100)}%`;
+                container.appendChild(cell);
+            }
+        }
+
+        // Quantum Matches
+        const quantumOpportunities = [
+            {
+                id: 1,
+                title: "Quantum ML Engineer",
+                company: "DeepMind",
+                logo: "DM",
+                match: 98,
+                skills: ["Quantum Computing", "PyTorch", "Linear Algebra"],
+                type: "Full-time",
+                salary: "$180k-250k",
+                fairness: 96,
+                tags: ["Remote", "Visa Sponsor", "Equity"],
+                color: "indigo"
+            },
+            {
+                id: 2,
+                title: "Blockchain Protocol Lead",
+                company: "Ethereum Foundation",
+                logo: "ETH",
+                match: 95,
+                skills: ["Solidity", "Cryptography", "Distributed Systems"],
+                type: "Project",
+                salary: "$200k+",
+                fairness: 99,
+                tags: ["DAO", "Global", "Impact"],
+                color: "purple"
+            },
+            {
+                id: 3,
+                title: "AI Ethics Researcher",
+                company: "OpenAI",
+                logo: "OA",
+                match: 92,
+                skills: ["Philosophy", "ML", "Policy"],
+                type: "Research",
+                salary: "$160k-220k",
+                fairness: 98,
+                tags: ["Publication", "Ethics", "Remote"],
+                color: "pink"
+            },
+            {
+                id: 4,
+                title: "Spatial Computing Dev",
+                company: "Apple",
+                logo: "",
+                match: 89,
+                skills: ["Swift", "ARKit", "3D Math"],
+                type: "Internship",
+                salary: "$8k/mo",
+                fairness: 94,
+                tags: ["Vision Pro", "On-site", "Mentorship"],
+                color: "gray"
+            }
+        ];
+
+        function renderQuantumMatches() {
+            const container = document.getElementById('quantum-matches');
+            container.innerHTML = quantumOpportunities.map(opp => `
+                <div class="group perspective-1000">
+                    <div class="card-3d glass-panel rounded-3xl p-6 border border-white/50 shadow-xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-${opp.color}-500/5 to-${opp.color}-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-start mb-6 relative z-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-${opp.color}-100 flex items-center justify-center text-${opp.color}-600 font-bold text-2xl shadow-lg">
+                                    ${opp.logo}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">${opp.title}</h3>
+                                    <p class="text-gray-500">${opp.company}</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-${opp.color}-600">${opp.match}%</div>
+                                <div class="text-xs text-gray-500">Quantum Match</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-4 relative z-10">
+                            ${opp.skills.map(skill => `
+                                <span class="px-3 py-1 bg-${opp.color}-50 text-${opp.color}-700 rounded-full text-sm font-medium border border-${opp.color}-100">
+                                    ${skill}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex items-center gap-4 text-sm text-gray-600 mb-6 relative z-10">
+                            <span class="flex items-center gap-1"><i class="fas fa-money-bill-wave text-green-500"></i> ${opp.salary}</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-shield-alt text-blue-500"></i> Fairness: ${opp.fairness}%</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-clock text-orange-500"></i> ${opp.type}</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-6 relative z-10">
+                            ${opp.tags.map(tag => `
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">
+                                    ${tag}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex gap-3 relative z-10">
+                            <button onclick="openQuantumModal(${opp.id})" class="flex-1 py-3 bg-gradient-to-r from-${opp.color}-500 to-${opp.color}-600 text-white rounded-xl font-bold hover:shadow-lg hover:shadow-${opp.color}-500/30 transition-all flex items-center justify-center gap-2 group-hover:scale-105">
+                                <i class="fas fa-atom"></i>
+                                Quantum Apply
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-200 rounded-xl hover:border-${opp.color}-300 hover:bg-${opp.color}-50 transition">
+                                <i class="fas fa-bookmark text-gray-400 hover:text-${opp.color}-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('animate-fade-in');
+            });
+            
+            const selectedTab = document.getElementById(tabName);
+            selectedTab.classList.remove('hidden');
+            selectedTab.classList.add('animate-fade-in');
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('tab-active', 'bg-white', 'shadow-md');
+                tab.classList.add('text-gray-600');
+            });
+            
+            event.currentTarget.classList.add('tab-active', 'bg-white', 'shadow-md');
+            event.currentTarget.classList.remove('text-gray-600');
+
+            if (tabName === 'matching') renderQuantumMatches();
+        }
+
+        // Weight Updates
+        function updateQuantumWeights(type, value) {
+            document.getElementById(`${type}-val`).textContent = value + '%';
+            document.getElementById(`${type}-bar`).style.width = value + '%';
+            
+            // Simulate recalculation
+            const matches = document.getElementById('quantum-matches');
+            if (matches) {
+                matches.style.opacity = '0.5';
+                setTimeout(() => {
+                    matches.style.opacity = '1';
+                    // Randomize scores slightly to show effect
+                    renderQuantumMatches();
+                }, 300);
+            }
+        }
+
+        function toggleFairnessMode() {
+            const btn = document.getElementById('fairness-toggle');
+            const isActive = btn.textContent === 'Active';
+            btn.textContent = isActive ? 'Paused' : 'Active';
+            btn.className = isActive 
+                ? 'flex-1 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition'
+                : 'flex-1 py-2 bg-green-100 text-green-700 rounded-xl text-sm font-bold hover:bg-green-200 transition';
+        }
+
+        function activateQuantumMode() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fas fa-atom fa-spin"></i> Processing...';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-atom"></i> Quantum Boost';
+                renderQuantumMatches();
+                // Add glow effect to matches
+                document.querySelectorAll('.card-3d').forEach(card => {
+                    card.style.boxShadow = '0 0 40px rgba(79, 70, 229, 0.3)';
+                });
+            }, 1500);
+        }
+
+        // Modal Functions
+        function openQuantumModal(id) {
+            const modal = document.getElementById('quantum-modal');
+            const content = document.getElementById('quantum-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeQuantumModal() {
+            const modal = document.getElementById('quantum-modal');
+            const content = document.getElementById('quantum-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initNeuralBackground();
+            initSkillConstellation();
+            initLiveFeed();
+            initSkillHeatmap();
+            renderQuantumMatches();
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin();
+        
+        window.addEventListener('load', () => {
+            gsap.from('.float', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMatch AI - Next-Gen Explainable Matching Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Dynamic Background */
+        .aurora-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: aurora 15s ease infinite;
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-dark {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 3D Card Effects */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-3d {
+            transform-style: preserve-3d;
+        }
+        
+        .card-3d {
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+        }
+        
+        /* Neural Network Animation */
+        .neural-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: pulse-node 2s infinite;
+        }
+        
+        @keyframes pulse-node {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+        
+        .neural-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4f46e5, transparent);
+            animation: data-flow 3s linear infinite;
+        }
+        
+        @keyframes data-flow {
+            0% { opacity: 0; transform: translateX(-100%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+        
+        /* Holographic Effect */
+        .holographic {
+            background: linear-gradient(135deg, 
+                rgba(255,0,0,0.1) 0%, 
+                rgba(0,255,0,0.1) 25%, 
+                rgba(0,0,255,0.1) 50%, 
+                rgba(255,0,255,0.1) 75%, 
+                rgba(255,255,0,0.1) 100%);
+            background-size: 200% 200%;
+            animation: holographic-shift 3s ease infinite;
+        }
+        
+        @keyframes holographic-shift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 200%; }
+        }
+        
+        /* Skill Constellation */
+        .constellation-line {
+            stroke: #4f46e5;
+            stroke-width: 1;
+            opacity: 0.3;
+            animation: constellation-pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes constellation-pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Blockchain Verification Badge */
+        .blockchain-badge {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #0f3460;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blockchain-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: blockchain-shine 3s infinite;
+        }
+        
+        @keyframes blockchain-shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* AI Thinking Animation */
+        .ai-thinking {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .ai-thinking span {
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: ai-bounce 1.4s ease-in-out infinite both;
+        }
+        
+        .ai-thinking span:nth-child(1) { animation-delay: -0.32s; }
+        .ai-thinking span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes ai-bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 4px;
+        }
+        
+        /* Floating Elements */
+        .float {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Gradient Text Animation */
+        .gradient-text-animated {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #db2777, #4f46e5);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        
+        /* Interactive Heatmap */
+        .skill-heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .heat-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .heat-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        /* Voice Wave Animation */
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+        }
+        
+        .voice-bar {
+            width: 4px;
+            background: #4f46e5;
+            border-radius: 2px;
+            animation: voice-animation 1s ease-in-out infinite;
+        }
+        
+        .voice-bar:nth-child(1) { height: 20%; animation-delay: 0s; }
+        .voice-bar:nth-child(2) { height: 60%; animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { height: 100%; animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { height: 60%; animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { height: 20%; animation-delay: 0.4s; }
+        
+        @keyframes voice-animation {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+        
+        /* AR Preview Container */
+        .ar-preview {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .ar-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        
+        /* Predictive Text Cursor */
+        .predictive-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #4f46e5;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* NFT Certificate Style */
+        .nft-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nft-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        /* Biometric Glow */
+        .biometric-active {
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.6);
+            animation: biometric-pulse 2s infinite;
+        }
+        
+        @keyframes biometric-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.8), 0 0 60px rgba(124, 58, 237, 0.4); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+    <!-- Dynamic Background Canvas -->
+    <canvas id="neural-canvas" class="fixed inset-0 z-0 opacity-30 pointer-events-none"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="glass-panel fixed w-full z-50 border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg holographic">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-display font-bold gradient-text-animated">SkillMatch AI</span>
+                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Neural Engine Active
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-1 bg-white/50 rounded-2xl p-1">
+                    <button onclick="switchTab('dashboard')" class="nav-tab tab-active px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2" data-tab="dashboard">
+                        <i class="fas fa-home"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('matching')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="matching">
+                        <i class="fas fa-brain"></i> AI Matching
+                    </button>
+                    <button onclick="switchTab('metaverse')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="metaverse">
+                        <i class="fas fa-vr-cardboard"></i> MetaVerse
+                    </button>
+                    <button onclick="switchTab('credentials')" class="nav-tab px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-900 transition-all duration-300 flex items-center gap-2" data-tab="credentials">
+                        <i class="fas fa-fingerprint"></i> Credentials
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-white/60 rounded-2xl border border-white/40">
+                        <div class="voice-wave">
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                            <div class="voice-bar"></div>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">AI Listening...</span>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold cursor-pointer biometric-active">
+                            JD
+                        </div>
+                        <div class="absolute right-0 mt-2 w-64 glass-panel rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right">
+                            <div class="p-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold">JD</div>
+                                    <div>
+                                        <p class="font-bold text-gray-800">John Doe</p>
+                                        <p class="text-xs text-gray-500">Blockchain Verified</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Trust Score</span>
+                                        <span class="font-bold text-green-600">98.4%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">NFT Badges</span>
+                                        <span class="font-bold text-indigo-600">12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content space-y-8">
+            <!-- Hero with 3D Elements -->
+            <div class="relative rounded-3xl overflow-hidden min-h-[500px] flex items-center">
+                <div class="absolute inset-0 aurora-bg opacity-90"></div>
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+                
+                <div class="relative z-10 w-full p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/30">
+                                <i class="fas fa-sparkles"></i>
+                                <span>Quantum-Enhanced Matching v2.0</span>
+                            </div>
+                            <h1 class="text-5xl md:text-7xl font-display font-bold text-white leading-tight">
+                                Your Skills,<br>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">Decentralized</span><br>
+                                Future
+                            </h1>
+                            <p class="text-xl text-white/90 max-w-lg">
+                                AI-powered, blockchain-verified, metaverse-ready career matching with neural explainability.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="switchTab('matching')" class="group px-8 py-4 bg-white text-indigo-600 rounded-2xl font-bold text-lg hover:bg-indigo-50 transition-all duration-300 flex items-center gap-3 shadow-2xl hover:shadow-white/25 hover:scale-105">
+                                    <span>Explore Matches</span>
+                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                                <button class="px-8 py-4 bg-white/10 backdrop-blur-md text-white rounded-2xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-300 flex items-center gap-3">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Watch Demo</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 3D Skill Constellation -->
+                        <div class="relative h-[400px] hidden lg:block">
+                            <div id="skill-constellation" class="absolute inset-0">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-32 h-32 rounded-full bg-white/10 backdrop-blur-xl border border-white/30 flex items-center justify-center float">
+                                    <i class="fas fa-user-astronaut text-6xl text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                                <i class="fas fa-bolt text-yellow-500"></i>
+                                Neural Match Feed
+                            </h3>
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold animate-pulse">LIVE</span>
+                            </div>
+                        </div>
+                        <div id="live-feed" class="space-y-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Skill Heatmap -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Skill Development Heatmap</h3>
+                        <div class="flex gap-6">
+                            <div id="skill-heatmap" class="skill-heatmap flex-1">
+                                <!-- Generated by JS -->
+                            </div>
+                            <div class="w-48 space-y-3">
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-900 rounded"></div>
+                                    <span class="text-gray-600">Expert</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-600 rounded"></div>
+                                    <span class="text-gray-600">Advanced</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-400 rounded"></div>
+                                    <span class="text-gray-600">Intermediate</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-4 h-4 bg-indigo-200 rounded"></div>
+                                    <span class="text-gray-600">Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gamification Sidebar -->
+                <div class="space-y-6">
+                    <!-- NFT Achievement Card -->
+                    <div class="nft-card rounded-3xl p-6 text-white shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-white/80 text-sm font-medium">Achievement Unlocked</p>
+                                    <h3 class="text-2xl font-bold">Skill Pioneer</h3>
+                                </div>
+                                <i class="fas fa-trophy text-3xl text-yellow-300"></i>
+                            </div>
+                            <div class="w-full h-32 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4 overflow-hidden relative">
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-pink-500/20"></div>
+                                <i class="fas fa-medal text-6xl text-yellow-300 relative z-10 float"></i>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-white/70">Token ID</p>
+                                    <p class="font-mono text-sm">#SKILL-7842</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-white/70">Rarity</p>
+                                    <p class="font-bold text-yellow-300">Legendary</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Companion -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl relative">
+                                <i class="fas fa-robot"></i>
+                                <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Astra AI</h3>
+                                <p class="text-sm text-gray-500">Your Career Copilot</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3 mb-4">
+                            <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                                <p class="text-sm text-gray-700">"I noticed 3 new blockchain opportunities matching your profile. Shall I analyze them?"</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="flex-1 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Analyze</button>
+                            <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">Later</button>
+                        </div>
+                    </div>
+
+                    <!-- Staking Rewards -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-coins text-yellow-500"></i>
+                            Skill Staking
+                        </h3>
+                        <div class="text-center mb-4">
+                            <p class="text-4xl font-bold text-indigo-600">2,450</p>
+                            <p class="text-sm text-gray-500">SKL Tokens Earned</p>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center">75% to next reward tier</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Matching Tab -->
+        <div id="matching" class="tab-content hidden space-y-8">
+            <!-- Quantum Control Panel -->
+            <div class="glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-display font-bold text-gray-800 mb-2">Quantum Matching Engine</h2>
+                        <p class="text-gray-600">Adjust neural parameters to customize your opportunity universe</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="activateQuantumMode()" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-purple-500/30 transition-all flex items-center gap-2 group">
+                            <i class="fas fa-atom group-hover:rotate-180 transition-transform duration-500"></i>
+                            Quantum Boost
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multi-Dimensional Sliders -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-code text-indigo-500"></i>
+                                Technical
+                            </label>
+                            <span id="tech-val" class="text-lg font-bold text-indigo-600">40%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" min="0" max="100" value="40" oninput="updateQuantumWeights('tech', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="tech-bar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-project-diagram text-purple-500"></i>
+                                Experience
+                            </label>
+                            <span id="exp-val" class="text-lg font-bold text-purple-600">35%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600" min="0" max="100" value="35" oninput="updateQuantumWeights('exp', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="exp-bar" class="h-full bg-purple-500 transition-all duration-300" style="width: 35%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-brain text-pink-500"></i>
+                                Domain
+                            </label>
+                            <span id="domain-val" class="text-lg font-bold text-pink-600">25%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-pink-600" min="0" max="100" value="25" oninput="updateQuantumWeights('domain', this.value)">
+                        <div class="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="domain-bar" class="h-full bg-pink-500 transition-all duration-300" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-white/50 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-balance-scale text-green-500"></i>
+                                Fairness
+                            </label>
+                            <span id="fair-val" class="text-lg font-bold text-green-600">Auto</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleFairnessMode()" id="fairness-toggle" class="flex-1 py-2 bg-green-100 text-green-700 rounded-xl text-sm font-bold hover:bg-green-200 transition">
+                                Active
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500">Ensures equitable opportunity distribution</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holographic Match Cards -->
+            <div id="quantum-matches" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- MetaVerse Tab -->
+        <div id="metaverse" class="tab-content hidden space-y-8">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-display font-bold gradient-text-animated mb-4">MetaVerse Career Hub</h2>
+                <p class="text-xl text-gray-600">Step into immersive interviews and virtual office tours</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- VR Office Tour -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-building text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Virtual Office Tours</h3>
+                        <p class="text-center text-white/80 mb-4">Experience company culture in VR before applying</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            Enter VR
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Avatar Interview -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-600 to-orange-500"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-user-tie text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">AI Avatar Practice</h3>
+                        <p class="text-center text-white/80 mb-4">Practice interviews with AI hiring managers</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            Start Session
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NFT Portfolio Gallery -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-teal-600"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-palette text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">NFT Portfolio</h3>
+                        <p class="text-center text-white/80 mb-4">Showcase verified projects as digital assets</p>
+                        <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-full font-semibold border border-white/30 hover:bg-white/30 transition">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AR Preview Section -->
+            <div class="glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                    <i class="fas fa-glasses text-indigo-600"></i>
+                    AR Workspace Preview
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="ar-preview h-64 bg-gray-900 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                            <i class="fas fa-cube text-6xl text-gray-700 group-hover:text-indigo-500 transition-colors"></i>
+                        </div>
+                        <div class="ar-overlay">
+                            <div class="text-white">
+                                <p class="font-bold text-lg">TechCorp HQ</p>
+                                <p class="text-sm text-white/70">Your future desk: Floor 12, Window View</p>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-green-500/80 backdrop-blur-md rounded-full text-xs font-bold text-white">
+                            <i class="fas fa-eye mr-1"></i> AR Active
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-map-marker-alt text-red-500"></i>
+                                <span class="font-semibold text-gray-800">Location</span>
+                            </div>
+                            <p class="text-gray-600">San Francisco, CA • 0.8 miles from your preference</p>
+                        </div>
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-users text-blue-500"></i>
+                                <span class="font-semibold text-gray-800">Team Size</span>
+                            </div>
+                            <p class="text-gray-600">12 engineers • 3 mentors assigned</p>
+                        </div>
+                        <div class="p-4 bg-white/50 rounded-2xl border border-white/60">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-coffee text-orange-500"></i>
+                                <span class="font-semibold text-gray-800">Amenities</span>
+                            </div>
+                            <div class="flex gap-2 flex-wrap">
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">☕ Free Coffee</span>
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">🏋️ Gym</span>
+                                <span class="px-2 py-1 bg-white rounded-lg text-xs">🎮 Game Room</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credentials Tab -->
+        <div id="credentials" class="tab-content hidden space-y-8">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-display font-bold gradient-text-animated mb-4">Blockchain Credentials</h2>
+                <p class="text-xl text-gray-600">Immutable, verifiable, owned by you</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Identity Card -->
+                <div class="lg:col-span-1">
+                    <div class="blockchain-badge rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-3xl">
+                                    <i class="fas fa-fingerprint"></i>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-white/60">DID</p>
+                                    <p class="font-mono text-sm">did:skill:0x7f8a...3d2e</p>
+                                </div>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-1">John Doe</h3>
+                            <p class="text-white/70 mb-6">Full Stack Developer</p>
+                            
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">Trust Score</span>
+                                    <span class="font-bold text-green-400">98.4%</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">Verifications</span>
+                                    <span class="font-bold">24</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-sm text-white/80">NFT Badges</span>
+                                    <span class="font-bold text-yellow-400">12</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="flex-1 py-3 bg-white/10 backdrop-blur-md rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-qrcode"></i>
+                                    Show QR
+                                </button>
+                                <button class="flex-1 py-3 bg-white/10 backdrop-blur-md rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-share-alt"></i>
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credential Wallet -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Verified Credentials</h3>
+                            <button class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition flex items-center gap-2">
+                                <i class="fas fa-plus"></i>
+                                Add New
+                            </button>
+                        </div>
+
+                        <div class="space-y-4" id="credential-list">
+                            <!-- Blockchain Verified Degree -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-green-200 hover:border-green-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/10 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center text-green-600 text-2xl">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">B.S. Computer Science</h4>
+                                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-bold">
+                                                <i class="fas fa-link mr-1"></i>On-Chain
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Stanford University • 2023</p>
+                                        <p class="text-xs text-gray-400 font-mono mt-1">0x8f72...9a1b • Verified 2 days ago</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NFT Skill Badge -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-purple-400/0 via-purple-400/10 to-purple-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 text-2xl">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">Advanced React Certification</h4>
+                                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-bold">
+                                                <i class="fas fa-gem mr-1"></i>NFT
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Meta • Issued 2024</p>
+                                        <p class="text-xs text-gray-400 font-mono mt-1">Token ID: #REACT-8842 • Rare</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <i class="fas fa-gem text-2xl text-purple-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Biometric Verification -->
+                            <div class="group p-4 bg-white rounded-2xl border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/10 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 text-2xl biometric-active">
+                                        <i class="fas fa-fingerprint"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h4 class="font-bold text-gray-800">Biometric Identity</h4>
+                                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-bold">
+                                                <i class="fas fa-shield-alt mr-1"></i>Live
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Facial + Voice + Behavioral</p>
+                                        <p class="text-xs text-gray-400 mt-1">Last verified: Just now</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zero-Knowledge Proof Section -->
+                    <div class="glass-panel rounded-3xl p-6 border border-white/50 shadow-xl">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-user-secret text-indigo-600"></i>
+                            Zero-Knowledge Proofs
+                        </h3>
+                        <p class="text-gray-600 mb-4">Prove qualifications without revealing sensitive data</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-dollar-sign text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">Salary Range</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove you're in range without revealing exact amount</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-award text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">GPA Threshold</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove 3.5+ GPA without showing transcript</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 text-center hover:shadow-lg transition cursor-pointer group">
+                                <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 group-hover:scale-110 transition">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800 text-sm">Experience Years</p>
+                                <p class="text-xs text-gray-500 mt-1">Prove 2+ years without revealing dates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quantum Apply Modal -->
+    <div id="quantum-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeQuantumModal()"></div>
+        <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-8 border border-white/50 shadow-2xl transform scale-95 opacity-0 transition-all duration-500" id="quantum-modal-content">
+            <button onclick="closeQuantumModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                <i class="fas fa-times text-gray-600"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl relative">
+                    <i class="fas fa-paper-plane"></i>
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 animate-ping opacity-30"></div>
+                </div>
+                <h3 class="text-3xl font-display font-bold text-gray-800 mb-2">Quantum Application Submitted</h3>
+                <p class="text-gray-600">Your application is now encrypted and distributed across the network</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="flex items-center gap-4 p-4 bg-green-50 rounded-xl border border-green-200">
+                    <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">Blockchain Notarized</p>
+                        <p class="text-sm text-gray-600">Tx Hash: 0x7f8a...3d2e</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <i class="fas fa-fingerprint text-2xl text-blue-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">Biometric Verified</p>
+                        <p class="text-sm text-gray-600">Identity confirmed via ZK-proof</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <i class="fas fa-brain text-2xl text-purple-500"></i>
+                    <div>
+                        <p class="font-semibold text-gray-800">AI Match Score</p>
+                        <p class="text-sm text-gray-600">94% compatibility recorded on-chain</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="closeQuantumModal()" class="flex-1 py-4 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition">Close</button>
+                <button class="flex-1 py-4 gradient-bg text-white rounded-2xl font-bold hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-chart-line"></i>
+                    Track Status
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Neural Network Background Animation
+        function initNeuralBackground() {
+            const canvas = document.getElementById('neural-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const nodes = [];
+            const nodeCount = 50;
+
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+
+                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(79, 70, 229, 0.3)';
+                    ctx.fill();
+                });
+
+                nodes.forEach((node, i) => {
+                    nodes.slice(i + 1).forEach(other => {
+                        const dist = Math.hypot(node.x - other.x, node.y - other.y);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(node.x, node.y);
+                            ctx.lineTo(other.x, other.y);
+                            ctx.strokeStyle = `rgba(79, 70, 229, ${0.1 * (1 - dist/150)})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Skill Constellation
+        function initSkillConstellation() {
+            const container = document.getElementById('skill-constellation');
+            const skills = ['React', 'Python', 'AI', 'Cloud', 'Data', 'UX', 'Node', 'Go'];
+            const colors = ['#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#059669', '#0891b2', '#4f46e5', '#7c3aed'];
+            
+            skills.forEach((skill, i) => {
+                const angle = (i / skills.length) * Math.PI * 2;
+                const radius = 120;
+                const x = Math.cos(angle) * radius + 150;
+                const y = Math.sin(angle) * radius + 150;
+                
+                const node = document.createElement('div');
+                node.className = 'absolute px-4 py-2 rounded-full text-white text-sm font-bold shadow-lg transform hover:scale-110 transition-transform cursor-pointer';
+                node.style.backgroundColor = colors[i];
+                node.style.left = x + 'px';
+                node.style.top = y + 'px';
+                node.textContent = skill;
+                
+                // Add connecting line
+                const line = document.createElement('div');
+                line.className = 'absolute h-px bg-white/20 origin-left';
+                line.style.width = radius + 'px';
+                line.style.left = '150px';
+                line.style.top = '150px';
+                line.style.transform = `rotate(${angle}rad)`;
+                
+                container.appendChild(line);
+                container.appendChild(node);
+            });
+        }
+
+        // Live Feed Simulation
+        function initLiveFeed() {
+            const feed = document.getElementById('live-feed');
+            const actions = [
+                { icon: 'fa-bolt', color: 'yellow', text: 'New AI match found for', sub: 'Machine Learning Engineer @ Google' },
+                { icon: 'fa-check-circle', color: 'green', text: 'Blockchain verification complete', sub: 'Credential: AWS Solutions Architect' },
+                { icon: 'fa-trophy', color: 'purple', text: 'Achievement unlocked', sub: 'Applied to 10 opportunities!' },
+                { icon: 'fa-coins', color: 'yellow', text: 'Earned 50 SKL tokens', sub: 'For completing profile verification' }
+            ];
+
+            function addFeedItem() {
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-white/60 transform translate-x-full opacity-0 transition-all duration-500';
+                item.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-${action.color}-100 flex items-center justify-center text-${action.color}-500">
+                        <i class="fas ${action.icon}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 text-sm">${action.text}</p>
+                        <p class="text-xs text-gray-500">${action.sub}</p>
+                    </div>
+                    <span class="text-xs text-gray-400">Just now</span>
+                `;
+                
+                feed.insertBefore(item, feed.firstChild);
+                if (feed.children.length > 4) feed.lastChild.remove();
+                
+                setTimeout(() => {
+                    item.classList.remove('translate-x-full', 'opacity-0');
+                }, 100);
+            }
+
+            setInterval(addFeedItem, 3000);
+            addFeedItem();
+        }
+
+        // Skill Heatmap
+        function initSkillHeatmap() {
+            const container = document.getElementById('skill-heatmap');
+            const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
+            
+            for (let i = 0; i < 28; i++) {
+                const cell = document.createElement('div');
+                const level = levels[Math.floor(Math.random() * levels.length)];
+                cell.className = 'heat-cell';
+                cell.style.backgroundColor = `rgba(79, 70, 229, ${level})`;
+                cell.title = `Activity Level: ${Math.round(level * 100)}%`;
+                container.appendChild(cell);
+            }
+        }
+
+        // Quantum Matches
+        const quantumOpportunities = [
+            {
+                id: 1,
+                title: "Quantum ML Engineer",
+                company: "DeepMind",
+                logo: "DM",
+                match: 98,
+                skills: ["Quantum Computing", "PyTorch", "Linear Algebra"],
+                type: "Full-time",
+                salary: "$180k-250k",
+                fairness: 96,
+                tags: ["Remote", "Visa Sponsor", "Equity"],
+                color: "indigo"
+            },
+            {
+                id: 2,
+                title: "Blockchain Protocol Lead",
+                company: "Ethereum Foundation",
+                logo: "ETH",
+                match: 95,
+                skills: ["Solidity", "Cryptography", "Distributed Systems"],
+                type: "Project",
+                salary: "$200k+",
+                fairness: 99,
+                tags: ["DAO", "Global", "Impact"],
+                color: "purple"
+            },
+            {
+                id: 3,
+                title: "AI Ethics Researcher",
+                company: "OpenAI",
+                logo: "OA",
+                match: 92,
+                skills: ["Philosophy", "ML", "Policy"],
+                type: "Research",
+                salary: "$160k-220k",
+                fairness: 98,
+                tags: ["Publication", "Ethics", "Remote"],
+                color: "pink"
+            },
+            {
+                id: 4,
+                title: "Spatial Computing Dev",
+                company: "Apple",
+                logo: "",
+                match: 89,
+                skills: ["Swift", "ARKit", "3D Math"],
+                type: "Internship",
+                salary: "$8k/mo",
+                fairness: 94,
+                tags: ["Vision Pro", "On-site", "Mentorship"],
+                color: "gray"
+            }
+        ];
+
+        function renderQuantumMatches() {
+            const container = document.getElementById('quantum-matches');
+            container.innerHTML = quantumOpportunities.map(opp => `
+                <div class="group perspective-1000">
+                    <div class="card-3d glass-panel rounded-3xl p-6 border border-white/50 shadow-xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-${opp.color}-500/5 to-${opp.color}-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-start mb-6 relative z-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-${opp.color}-100 flex items-center justify-center text-${opp.color}-600 font-bold text-2xl shadow-lg">
+                                    ${opp.logo}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">${opp.title}</h3>
+                                    <p class="text-gray-500">${opp.company}</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-${opp.color}-600">${opp.match}%</div>
+                                <div class="text-xs text-gray-500">Quantum Match</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-4 relative z-10">
+                            ${opp.skills.map(skill => `
+                                <span class="px-3 py-1 bg-${opp.color}-50 text-${opp.color}-700 rounded-full text-sm font-medium border border-${opp.color}-100">
+                                    ${skill}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex items-center gap-4 text-sm text-gray-600 mb-6 relative z-10">
+                            <span class="flex items-center gap-1"><i class="fas fa-money-bill-wave text-green-500"></i> ${opp.salary}</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-shield-alt text-blue-500"></i> Fairness: ${opp.fairness}%</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-clock text-orange-500"></i> ${opp.type}</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-6 relative z-10">
+                            ${opp.tags.map(tag => `
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">
+                                    ${tag}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex gap-3 relative z-10">
+                            <button onclick="openQuantumModal(${opp.id})" class="flex-1 py-3 bg-gradient-to-r from-${opp.color}-500 to-${opp.color}-600 text-white rounded-xl font-bold hover:shadow-lg hover:shadow-${opp.color}-500/30 transition-all flex items-center justify-center gap-2 group-hover:scale-105">
+                                <i class="fas fa-atom"></i>
+                                Quantum Apply
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-200 rounded-xl hover:border-${opp.color}-300 hover:bg-${opp.color}-50 transition">
+                                <i class="fas fa-bookmark text-gray-400 hover:text-${opp.color}-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('animate-fade-in');
+            });
+            
+            const selectedTab = document.getElementById(tabName);
+            selectedTab.classList.remove('hidden');
+            selectedTab.classList.add('animate-fade-in');
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('tab-active', 'bg-white', 'shadow-md');
+                tab.classList.add('text-gray-600');
+            });
+            
+            event.currentTarget.classList.add('tab-active', 'bg-white', 'shadow-md');
+            event.currentTarget.classList.remove('text-gray-600');
+
+            if (tabName === 'matching') renderQuantumMatches();
+        }
+
+        // Weight Updates
+        function updateQuantumWeights(type, value) {
+            document.getElementById(`${type}-val`).textContent = value + '%';
+            document.getElementById(`${type}-bar`).style.width = value + '%';
+            
+            // Simulate recalculation
+            const matches = document.getElementById('quantum-matches');
+            if (matches) {
+                matches.style.opacity = '0.5';
+                setTimeout(() => {
+                    matches.style.opacity = '1';
+                    // Randomize scores slightly to show effect
+                    renderQuantumMatches();
+                }, 300);
+            }
+        }
+
+        function toggleFairnessMode() {
+            const btn = document.getElementById('fairness-toggle');
+            const isActive = btn.textContent === 'Active';
+            btn.textContent = isActive ? 'Paused' : 'Active';
+            btn.className = isActive 
+                ? 'flex-1 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition'
+                : 'flex-1 py-2 bg-green-100 text-green-700 rounded-xl text-sm font-bold hover:bg-green-200 transition';
+        }
+
+        function activateQuantumMode() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fas fa-atom fa-spin"></i> Processing...';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-atom"></i> Quantum Boost';
+                renderQuantumMatches();
+                // Add glow effect to matches
+                document.querySelectorAll('.card-3d').forEach(card => {
+                    card.style.boxShadow = '0 0 40px rgba(79, 70, 229, 0.3)';
+                });
+            }, 1500);
+        }
+
+        // Modal Functions
+        function openQuantumModal(id) {
+            const modal = document.getElementById('quantum-modal');
+            const content = document.getElementById('quantum-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeQuantumModal() {
+            const modal = document.getElementById('quantum-modal');
+            const content = document.getElementById('quantum-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initNeuralBackground();
+            initSkillConstellation();
+            initLiveFeed();
+            initSkillHeatmap();
+            renderQuantumMatches();
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin();
+        
+        window.addEventListener('load', () => {
+            gsap.from('.float', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html>
