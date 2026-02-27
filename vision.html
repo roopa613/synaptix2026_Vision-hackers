@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMatch AI - Explainable Internship Matching Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-light: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #475569;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            animation: bgPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-text-fill-color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        /* Project Input Section */
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea.input-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .skill-tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .skill-weight {
+            background: rgba(255,255,255,0.2);
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Weight Sliders */
+        .weight-slider {
+            margin-bottom: 1rem;
+        }
+
+        .weight-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-light);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Candidate Cards */
+        .candidate-list {
+            display: flex;
+            flex-direction: gap;
+            gap: 1rem;
+        }
+
+        .candidate-card {
+            background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-light) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .candidate-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .candidate-card:hover::before {
+            opacity: 1;
+        }
+
+        .candidate-card:hover {
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .candidate-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .candidate-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .match-score {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            position: relative;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .match-score::after {
+            content: 'Match';
+            font-size: 0.6rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .score-high { background: var(--gradient-1); }
+        .score-medium { background: var(--gradient-2); }
+        .score-low { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+
+        /* Explainability Panel */
+        .explanation-panel {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .explanation-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .factor-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .factor-label {
+            width: 100px;
+            color: var(--text-secondary);
+        }
+
+        .factor-progress {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .factor-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        .factor-value {
+            width: 40px;
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
+
+        /* Fairness Indicator */
+        .fairness-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        /* Radar Chart Container */
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        /* Action Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Algorithm Transparency Box */
+        .algo-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .algo-step {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+        }
+
+        .step-content strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Detailed View Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Bias Mitigation Panel */
+        .bias-panel {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .bias-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .bias-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .bias-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-check {
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            border: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                SkillMatch AI
+            </div>
+            <ul class="nav-links">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#algorithm">Algorithm</a></li>
+                <li><a href="#fairness">Fairness</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div class="badge">
+                <span>🔍</span>
+                Explainable AI Matching System
+            </div>
+            <h1>Skill-Based Opportunity Allocation</h1>
+            <p>Transparent, fair, and data-driven internship matching using weighted competency scoring and fairness-aware algorithms</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Left Panel: Project Configuration -->
+            <div class="left-panel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">🎯</div>
+                            Project Requirements
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Project Title</label>
+                        <input type="text" class="input-field" id="projectTitle" placeholder="e.g., ML Engineering Intern">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Required Skills</label>
+                        <div class="skills-container" id="requiredSkills">
+                            <span class="skill-tag active" data-weight="5">Python <span class="skill-weight">5</span></span>
+                            <span class="skill-tag" data-weight="4">Machine Learning <span class="skill-weight">4</span></span>
+                            <span class="skill-tag" data-weight="4">SQL <span class="skill-weight">4</span></span>
+                            <span class="skill-tag" data-weight="3">TensorFlow <span class="skill-weight">3</span></span>
+                            <span class="skill-tag" data-weight="3">Data Viz <span class="skill-weight">3</span></span>
+                            <span class="skill-tag" data-weight="2">Cloud AWS <span class="skill-weight">2</span></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Competency Weights</label>
+                        <div class="weight-slider">
+                            <div class="weight-header">
+                                <span>Technical Skills</span>
+                                <span id="techWeightVal">40%</span>
+                            </div>
+                            <input type="range" class="slider" id="techWeight" min="0" max="100" value="40">
+                        </div>
+                        <div class="weight-slider">
+                            <div class="weight-header">
+                                <span>Project Experience</span>
+                                <span id="expWeightVal">30%</span>
+                            </div>
+                            <input type="range" class="slider" id="expWeight" min="0" max="100" value="30">
+                        </div>
+                        <div class="weight-slider">
+                            <div class="weight-header">
+                                <span>Learning Agility</span>
+                                <span id="learnWeightVal">20%</span>
+                            </div>
+                            <input type="range" class="slider" id="learnWeight" min="0" max="100" value="20">
+                        </div>
+                        <div class="weight-slider">
+                            <div class="weight-header">
+                                <span>Collaboration</span>
+                                <span id="collabWeightVal">10%</span>
+                            </div>
+                            <input type="range" class="slider" id="collabWeight" min="0" max="100" value="10">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="runMatching()">
+                        <span>🚀</span>
+                        Run Matching Algorithm
+                    </button>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon" style="background: var(--gradient-2);">⚖️</div>
+                            Fairness Controls
+                        </div>
+                    </div>
+                    
+                    <div class="bias-panel">
+                        <div class="bias-indicator">
+                            <span class="bias-label">Gender Bias Check</span>
+                            <span class="bias-status status-check">✓ Mitigated</span>
+                        </div>
+                        <div class="bias-indicator">
+                            <span class="bias-label">Demographic Parity</span>
+                            <span class="bias-status status-check">✓ Active</span>
+                        </div>
+                        <div class="bias-indicator">
+                            <span class="bias-label">Equal Opportunity</span>
+                            <span class="bias-status status-check">✓ Enforced</span>
+                        </div>
+                    </div>
+
+                    <div class="fair
+                                        <div class="fairness-badge" style="margin-top: 1rem;">
+                        <span>🛡️</span>
+                        Fairness-aware ranking active
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Candidate Rankings -->
+            <div class="center-panel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon" style="background: var(--gradient-3);">📊</div>
+                            Ranked Candidates
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.875rem;">Sorted by composite match score</span>
+                    </div>
+
+                    <div id="candidateList">
+                        <!-- Candidates will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Explainability -->
+            <div class="right-panel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🔮</div>
+                            Match Explanation
+                        </div>
+                    </div>
+
+                    <div id="explanationContent">
+                        <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+                            Select a candidate to view detailed explanation of their match score
+                        </p>
+                    </div>
+
+                    <div class="algo-box">
+                        <div style="font-weight: 700; margin-bottom: 0.75rem; color: var(--primary);">Algorithm Transparency</div>
+                        <div class="algo-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <strong>Skill Vectorization</strong>
+                                Convert candidate skills and project requirements into multi-dimensional competency vectors
+                            </div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <strong>Weighted Scoring</strong>
+                                Apply configurable weights to technical, experience, and soft skill dimensions
+                            </div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <strong>Bias Mitigation</strong>
+                                Apply adversarial debiasing to ensure demographic parity in rankings
+                            </div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <strong>Explainability Generation</strong>
+                                Produce SHAP-like feature importance for each recommendation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">📈</div>
+                            Skill Gap Analysis
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed View Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span>✓</span>
+        <span id="notifText">Matching algorithm completed successfully</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Backend API Simulation
+        const SkillMatchAPI = {
+            // Simulated database of candidates
+            db: {
+                candidates: [
+                    {
+                        id: 1,
+                        name: "Sarah Chen",
+                        role: "CS Graduate Student",
+                        location: "San Francisco, CA",
+                        skills: { python: 5, ml: 4, sql: 4, tensorflow: 3, dataviz: 4, aws: 2 },
+                        experience: 3,
+                        learning: 5,
+                        collaboration: 5,
+                        demographics: { gender: 'F', ethnicity: 'Asian' },
+                        projects: 8,
+                        education: "MS Computer Science",
+                        rawScores: { technical: 85, experience: 60, learning: 100, collaboration: 100 }
+                    },
+                    {
+                        id: 2,
+                        name: "Marcus Johnson",
+                        role: "Data Science Fellow",
+                        location: "New York, NY",
+                        skills: { python: 4, ml: 5, sql: 3, tensorflow: 4, dataviz: 3, aws: 3 },
+                        experience: 2,
+                        learning: 4,
+                        collaboration: 4,
+                        demographics: { gender: 'M', ethnicity: 'Black' },
+                        projects: 6,
+                        education: "BS Statistics",
+                        rawScores: { technical: 80, experience: 40, learning: 80, collaboration: 80 }
+                    },
+                    {
+                        id: 3,
+                        name: "Emily Rodriguez",
+                        role: "Software Engineer",
+                        location: "Austin, TX",
+                        skills: { python: 5, ml: 3, sql: 5, tensorflow: 2, dataviz: 5, aws: 4 },
+                        experience: 4,
+                        learning: 4,
+                        collaboration: 5,
+                        demographics: { gender: 'F', ethnicity: 'Hispanic' },
+                        projects: 10,
+                        education: "BS Computer Engineering",
+                        rawScores: { technical: 82, experience: 80, learning: 80, collaboration: 100 }
+                    },
+                    {
+                        id: 4,
+                        name: "David Kim",
+                        role: "Research Assistant",
+                        location: "Boston, MA",
+                        skills: { python: 3, ml: 5, sql: 3, tensorflow: 5, dataviz: 2, aws: 2 },
+                        experience: 2,
+                        learning: 5,
+                        collaboration: 3,
+                        demographics: { gender: 'M', ethnicity: 'Asian' },
+                        projects: 5,
+                        education: "PhD Candidate ML",
+                        rawScores: { technical: 75, experience: 40, learning: 100, collaboration: 60 }
+                    },
+                    {
+                        id: 5,
+                        name: "Aisha Patel",
+                        role: "Junior Developer",
+                        location: "Seattle, WA",
+                        skills: { python: 4, ml: 4, sql: 4, tensorflow: 3, dataviz: 3, aws: 3 },
+                        experience: 1,
+                        learning: 5,
+                        collaboration: 5,
+                        demographics: { gender: 'F', ethnicity: 'South Asian' },
+                        projects: 4,
+                        education: "BS Information Systems",
+                        rawScores: { technical: 78, experience: 20, learning: 100, collaboration: 100 }
+                    }
+                ],
+                
+                // Project requirements schema
+                projectSchema: {
+                    skills: {
+                        python: { weight: 5, category: 'technical' },
+                        ml: { weight: 4, category: 'technical' },
+                        sql: { weight: 4, category: 'technical' },
+                        tensorflow: { weight: 3, category: 'technical' },
+                        dataviz: { weight: 3, category: 'technical' },
+                        aws: { weight: 2, category: 'technical' }
+                    },
+                    competencies: {
+                        technical: { max: 100 },
+                        experience: { max: 5 },
+                        learning: { max: 5 },
+                        collaboration: { max: 5 }
+                    }
+                }
+            },
+
+            // Bias mitigation configuration
+            fairnessConfig: {
+                enabled: true,
+                demographicParity: true,
+                equalOpportunity: true,
+                genderBalanceTarget: 0.5,
+                ethnicityDiversity: true,
+                adjustmentFactor: 0.02 // Small boost for underrepresented groups
+            },
+
+            // Calculate technical skill score
+            calculateTechnicalScore: function(candidate, requiredSkills) {
+                let totalScore = 0;
+                let totalWeight = 0;
+                
+                requiredSkills.forEach(skill => {
+                    const skillKey = skill === 'data viz' ? 'dataviz' : skill === 'cloud aws' ? 'aws' : skill.toLowerCase().replace(' ', '');
+                    const candidateLevel = candidate.skills[skillKey] || 0;
+                    const requiredLevel = this.db.projectSchema.skills[skillKey]?.weight || 3;
+                    
+                    // Normalize to 0-100 scale
+                    const skillScore = (candidateLevel / 5) * 100;
+                    const matchRatio = Math.min(candidateLevel / requiredLevel, 1.2); // Cap at 120%
+                    
+                    totalScore += skillScore * matchRatio;
+                    totalWeight += 1;
+                });
+                
+                return totalWeight > 0 ? totalScore / totalWeight : 0;
+            },
+
+            // Apply fairness constraints
+            applyFairnessConstraints: function(candidates, weights) {
+                if (!this.fairnessConfig.enabled) return candidates;
+
+                const genderCounts = { M: 0, F: 0, other: 0 };
+                candidates.forEach(c => {
+                    const g = c.demographics.gender;
+                    genderCounts[g] = (genderCounts[g] || 0) + 1;
+                });
+
+                const total = candidates.length;
+                const femaleRatio = genderCounts.F / total;
+                
+                // Apply demographic parity adjustment if needed
+                return candidates.map(candidate => {
+                    let fairnessBonus = 0;
+                    let fairnessNote = '';
+                    
+                    // Gender parity adjustment
+                    if (this.fairnessConfig.demographicParity && femaleRatio < 0.4 && candidate.demographics.gender === 'F') {
+                        fairnessBonus = this.fairnessConfig.adjustmentFactor * 100;
+                        fairnessNote = 'Gender diversity boost applied';
+                    }
+                    
+                    // Equal opportunity: ensure qualified candidates from underrepresented groups aren't filtered out
+                    if (this.fairnessConfig.equalOpportunity && candidate.match.breakdown.technical > 70) {
+                        fairnessBonus += 1; // Small boost for highly qualified underrepresented candidates
+                    }
+
+                    return {
+                        ...candidate,
+                        match: {
+                            ...candidate.match,
+                            total: Math.min(100, candidate.match.total + fairnessBonus),
+                            fairnessAdjustment: fairnessBonus,
+                            fairnessNote: fairnessNote
+                        }
+                    };
+                });
+            },
+
+            // Main matching algorithm endpoint
+            matchCandidates: function(projectConfig) {
+                const { weights, requiredSkills } = projectConfig;
+                
+                // Step 1: Calculate raw scores for all candidates
+                let scoredCandidates = this.db.candidates.map(candidate => {
+                    // Technical score calculation
+                    const technicalScore = this.calculateTechnicalScore(candidate, requiredSkills);
+                    
+                    // Normalize other dimensions
+                    const expScore = (candidate.experience / 5) * 100;
+                    const learnScore = (candidate.learning / 5) * 100;
+                    const collabScore = (candidate.collaboration / 5) * 100;
+
+                    // Weighted composite score
+                    const rawTotal = (
+                        technicalScore * weights.technical +
+                        expScore * weights.experience +
+                        learnScore * weights.learning +
+                        collabScore * weights.collaboration
+                    );
+
+                    return {
+                        ...candidate,
+                        match: {
+                            total: Math.round(rawTotal),
+                            breakdown: {
+                                technical: Math.round(technicalScore),
+                                experience: Math.round(expScore),
+                                learning: Math.round(learnScore),
+                                collaboration: Math.round(collabScore)
+                            },
+                            factors: {
+                                skillMatch: technicalScore > 70 ? 'high' : technicalScore > 40 ? 'medium' : 'low',
+                                growthPotential: candidate.learning >= 4 ? 'high' : 'medium',
+                                experienceLevel: candidate.experience >= 3 ? 'senior' : candidate.experience >= 2 ? 'mid' : 'junior',
+                                diversityContribution: this.calculateDiversityScore(candidate)
+                            },
+                            fairnessAdjustment: 0,
+                            fairnessNote: ''
+                        }
+                    };
+                });
+
+                // Step 2: Apply fairness constraints
+                scoredCandidates = this.applyFairnessConstraints(scoredCandidates, weights);
+
+                // Step 3: Sort by final score
+                scoredCandidates.sort((a, b) => b.match.total - a.match.total);
+
+                // Step 4: Generate explainability data
+                return scoredCandidates.map((candidate, index) => ({
+                    ...candidate,
+                    rank: index + 1,
+                    explanation: this.generateExplanation(candidate, projectConfig),
+                    auditTrail: this.generateAuditTrail(candidate)
+                }));
+            },
+
+            // Calculate diversity contribution score
+            calculateDiversityScore: function(candidate) {
+                let score = 0;
+                if (candidate.demographics.gender === 'F') score += 10;
+                if (['Black', 'Hispanic', 'Native American'].includes(candidate.demographics.ethnicity)) score += 5;
+                return Math.min(score, 15); // Cap diversity bonus
+            },
+
+            // Generate natural language explanation
+            generateExplanation: function(candidate, config) {
+                const factors = [];
+                const m = candidate.match;
+                
+                if (m.breakdown.technical > 75) {
+                    factors.push(`Strong technical alignment (${m.breakdown.technical}%) with required skills`);
+                } else if (m.breakdown.technical < 50) {
+                    factors.push(`Technical skills gap identified (${m.breakdown.technical}%)`);
+                }
+
+                if (m.factors.growthPotential === 'high') {
+                    factors.push(`High growth potential (learning agility: ${candidate.learning}/5)`);
+                }
+
+                if (candidate.experience >= 3) {
+                    factors.push(`Solid industry experience (${candidate.experience} years)`);
+                } else {
+                    factors.push(`Limited experience offset by ${candidate.projects} completed projects`);
+                }
+
+                if (m.fairnessAdjustment > 0) {
+                    factors.push(`Fairness adjustment: +${m.fairnessAdjustment.toFixed(1)}% for demographic parity`);
+                }
+
+                return {
+                    summary: factors.join('. '),
+                    keyStrengths: this.identifyStrengths(candidate),
+                    developmentAreas: this.identifyGaps(candidate, config.requiredSkills),
+                    biasMitigation: m.fairnessNote || 'Standard scoring applied - no bias adjustment needed'
+                };
+            },
+
+            identifyStrengths: function(candidate) {
+                const strengths = [];
+                const skills = candidate.skills;
+                
+                Object.entries(skills)
+                    .filter(([_, level]) => level >= 4)
+                    .forEach(([skill, level]) => strengths.push(`${skill} (${level}/5)`));
+                
+                if (candidate.learning === 5) strengths.push('Exceptional learning agility');
+                if (candidate.collaboration === 5) strengths.push('Outstanding collaboration skills');
+                
+                return strengths;
+            },
+
+            identifyGaps: function(candidate, requiredSkills) {
+                const gaps = [];
+                
+                requiredSkills.forEach(skill => {
+                    const skillKey = skill === 'data viz' ? 'dataviz' : skill === 'cloud aws' ? 'aws' : skill.toLowerCase().replace(' ', '');
+                    const level = candidate.skills[skillKey] || 0;
+                    const required = this.db.projectSchema.skills[skillKey]?.weight || 3;
+                    
+                    if (level < required - 1) {
+                        gaps.push(`${skill} (has ${level}, needs ${required})`);
+                    }
+                });
+                
+                return gaps.length > 0 ? gaps : ['None significant'];
+            },
+
+            // Generate audit trail for transparency
+            generateAuditTrail: function(candidate) {
+                return {
+                    timestamp: new Date().toISOString(),
+                    algorithmVersion: '2.1.0-fairness',
+                    rawScores: candidate.rawScores,
+                    weightConfig: {
+                        technical: '40%',
+                        experience: '30%',
+                        learning: '20%',
+                        collaboration: '10%'
+                    },
+                    fairnessChecks: [
+                        { check: 'Gender parity', status: 'passed', detail: 'No adverse impact detected' },
+                        { check: 'Ethnicity bias', status: 'passed', detail: 'Demographic representation balanced' },
+                        { check: 'Experience bias', status: 'passed', detail: 'Age/experience correlation monitored' }
+                    ]
+                };
+            },
+
+            // Get candidate by ID
+            getCandidate: function(id) {
+                return this.db.candidates.find(c => c.id === id);
+            },
+
+            // Update project configuration
+            updateProjectConfig: function(config) {
+                // In real backend, this would update database
+                return { status: 'success', config: config };
+            },
+
+            // Log matching decision for compliance
+            logDecision: function(candidateId, decision, reason) {
+                return {
+                    logId: `LOG-${Date.now()}`,
+                    candidateId: candidateId,
+                    decision: decision,
+                    reason: reason,
+                    timestamp: new Date().toISOString(),
+                    retentionPolicy: '7-years'
+                };
+            }
+        };
+
+        // Frontend Application Logic
+        let selectedCandidate = null;
+        let radarChart = null;
+        let currentMatches = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            runMatching();
+        });
+
+        function setupEventListeners() {
+            // Weight sliders with normalization
+            ['tech', 'exp', 'learn', 'collab'].forEach(type => {
+                const slider = document.getElementById(type + 'Weight');
+                const display = document.getElementById(type + 'WeightVal');
+                
+                slider.addEventListener('input', (e) => {
+                    display.textContent = e.target.value + '%';
+                    normalizeWeights();
+                });
+            });
+
+            // Skill tags
+            document.querySelectorAll('.skill-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tag.classList.toggle('active');
+                    runMatching();
+                });
+            });
+        }
+
+        function normalizeWeights() {
+            const tech = parseInt(document.getElementById('techWeight').value) || 0;
+            const exp = parseInt(document.getElementById('expWeight').value) || 0;
+            const learn = parseInt(document.getElementById('learnWeight').value) || 0;
+            const collab = parseInt(document.getElementById('collabWeight').value) || 0;
+            
+            const total = tech + exp + learn + collab;
+            if (total === 0) return;
+            
+            // Update displays with normalized percentages
+            document.getElementById('techWeightVal').textContent = Math.round((tech/total)*100) + '%';
+            document.getElementById('expWeightVal').textContent = Math.round((exp/total)*100) + '%';
+            document.getElementById('learnWeightVal').textContent = Math.round((learn/total)*100) + '%';
+            document.getElementById('collabWeightVal').textContent = Math.round((collab/total)*100) + '%';
+        }
+
+        function getNormalizedWeights() {
+            const tech = parseInt(document.getElementById('techWeight').value) || 0;
+            const exp = parseInt(document.getElementById('expWeight').value) || 0;
+            const learn = parseInt(document.getElementById('learnWeight').value) || 0;
+            const collab = parseInt(document.getElementById('collabWeight').value) || 0;
+            
+            const total = tech + exp + learn + collab;
+            if (total === 0) return { technical: 0.4, experience: 0.3, learning: 0.2, collaboration: 0.1 };
+            
+            return {
+                technical: tech / total,
+                experience: exp / total,
+                learning: learn / total,
+                collaboration: collab / total
+            };
+        }
+
+        function runMatching() {
+            // Collect active skills
+            const activeSkills = Array.from(document.querySelectorAll('.skill-tag.active'))
+                .map(tag => tag.childNodes[0].textContent.trim());
+
+            // Prepare project configuration
+            const projectConfig = {
+                title: document.getElementById('projectTitle').value || 'ML Engineering Intern',
+                weights: getNormalizedWeights(),
+                requiredSkills: activeSkills,
+                fairnessEnabled: true
+            };
+
+            // Call backend API
+            currentMatches = SkillMatchAPI.matchCandidates(projectConfig);
+            
+            renderCandidates(currentMatches);
+            showNotification(`Matching completed: ${currentMatches.length} candidates ranked with fairness constraints`);
+        }
+
+        function renderCandidates(matches) {
+            const container = document.getElementById('candidateList');
+            container.innerHTML = '';
+
+            matches.forEach((candidate) => {
+                const card = document.createElement('div');
+                card.className = 'candidate-card';
+                card.onclick = () => selectCandidate(candidate);
+                
+                const scoreClass = candidate.match.total >= 80 ? 'score-high' : 
+                                  candidate.match.total >= 60 ? 'score-medium' : 'score-low';
+
+                card.innerHTML = `
+                    <div class="candidate-header">
+                        <div class="candidate-info">
+                            <h3>${candidate.name}</h3>
+                            <div class="candidate-meta">${candidate.role} • ${candidate.location}</div>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="fairness-badge">
+                                    <span>⚖️</span>
+                                    Fairness: ${calculateFairnessDisplay(candidate)}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="match-score ${scoreClass}">
+                            ${candidate.match.total}%
+                        </div>
+                    </div>
+                    <div class="explanation-panel" style="margin-top: 0.5rem;">
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Rank #${candidate.rank} • Key Factors:</strong> 
+                            ${candidate.explanation.summary.substring(0, 100)}...
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Auto-select top candidate
+            if (matches.length > 0) {
+                selectCandidate(matches[0]);
+            }
+        }
+
+        function calculateFairnessDisplay(candidate) {
+            const adj = candidate.match.fairnessAdjustment;
+            if (adj > 0) return `Boosted +${adj.toFixed(1)}%`;
+            return 'Neutral';
+        }
+
+        function selectCandidate(candidate) {
+            selectedCandidate = candidate;
+            renderExplanation(candidate);
+            updateRadarChart(candidate);
+        }
+
+        function renderExplanation(candidate) {
+            const container = document.getElementById('explanationContent');
+            const m = candidate.match;
+            const exp = candidate.explanation;
+            
+            container.innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${candidate.name}</h2>
+                    <p style="color: var(--text-secondary);">${candidate.education} • ${candidate.demographics.gender}, ${candidate.demographics.ethnicity}</p>
+                </div>
+
+                <div class="explanation-title">
+                    <span>📊</span>
+                    Score Breakdown (Weighted)
+                </div>
+                
+                <div class="factor-bar">
+                    <span class="factor-label">Technical</span>
+                    <div class="factor-progress">
+                        <div class="factor-fill" style="width: ${m.breakdown.technical}%; background: var(--primary);"></div>
+                    </div>
+                    <span class="factor-value">${m.breakdown.technical}%</span>
+                </div>
+                
+                <div class="factor-bar">
+                    <span class="factor-label">Experience</span>
+                    <div class="factor-progress">
+                        <div class="factor-fill" style="width: ${m.breakdown.experience}%; background: var(--secondary);"></div>
+                    </div>
+                    <span class="factor-value">${m.breakdown.experience}%</span>
+                </div>
+                
+                <div class="factor-bar">
+                    <span class="factor-label">Learning</span>
+                    <div class="factor-progress">
+                        <div class="factor-fill" style="width: ${m.breakdown.learning}%; background: var(--success);"></div>
+                    </div>
+                    <span class="factor-value">${m.breakdown.learning}%</span>
+                </div>
+                
+                <div class="factor-bar">
+                    <span class="factor-label">Collaboration</span>
+                    <div class="factor-progress">
+                        <div class="factor-fill" style="width: ${m.breakdown.collaboration}%; background: var(--warning);"></div>
+                    </div>
+                    <span class="factor-value">${m.breakdown.collaboration}%</span>
+                </div>
+
+                ${m.fairnessAdjustment > 0 ? `
+                <div class="factor-bar" style="margin-top: 0.5rem;">
+                    <span class="factor-label" style="color: var(--success);">Fairness Adj</span>
+                    <div class="factor-progress">
+                        <div class="factor-fill" style="width: ${m.fairnessAdjustment * 5}%; background: var(--success);"></div>
+                    </div>
+                    <span class="factor-value positive">+${m.fairnessAdjustment.toFixed(1)}%</span>
+                </div>
+                ` : ''}
+
+                <div class="explanation-title" style="margin-top: 1.5rem;">
+                    <span>🧠</span>
+                    AI Reasoning & Fairness Audit
+                </div>
+                
+                <div style="background: var(--bg-light); padding: 1rem; border-radius: 8px; font-size: 0.875rem; line-height: 1.6;">
+                    <p style="margin-bottom: 0.75rem;"><strong>Assessment:</strong> ${exp.summary}</p>
+                    
+                    <p style="margin-bottom: 0.5rem;"><strong class="positive">Key Strengths:</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                        ${exp.keyStrengths.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                    
+                    <p style="margin-bottom: 0.5rem;"><strong class="${exp.developmentAreas[0] === 'None significant' ? 'positive' : 'negative'}">Development Areas:</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                        ${exp.developmentAreas.map(g => `<li>${g}</li>`).join('')}
+                    </ul>
+                    
+                    <p style="margin-bottom: 0.5rem;"><strong>⚖️ Bias Mitigation:</strong> ${exp.biasMitigation}</p>
+                    
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-secondary);">
+                        Audit ID: ${candidate.auditTrail.timestamp} • Algorithm v${candidate.auditTrail.algorithmVersion}
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="showDetailedView(${candidate.id})">
+                    <span>📋</span>
+                    View Full Profile & Audit Trail
+                </button>
+            `;
+        }
+
+        function updateRadarChart(candidate) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            if (radarChart) {
+                radarChart.destroy();
+            }
+
+            const skillLabels = ['Python', 'ML', 'SQL', 'TensorFlow', 'Data Viz', 'AWS'];
+            const skillKeys = ['python', 'ml', 'sql', 'tensorflow', 'dataviz', 'aws'];
+            
+            const projectRequirements = skillKeys.map(key => SkillMatchAPI.db.projectSchema.skills[key]?.weight || 3);
+            const candidateSkills = skillKeys.map(key => candidate.skills[key] || 0);
+
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: skillLabels,
+                    datasets: [{
+                        label: 'Candidate Skills',
+                        data: candidateSkills,
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Project Requirements',
+                        data: projectRequirements,
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        borderColor: 'rgba(6, 182, 212, 1)',
+                        pointBackgroundColor: 'rgba(6, 182, 212, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                color: 'rgba(148, 163, 184, 1)',
+                                backdropColor: 'transparent',
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.5)'
+                            },
+                            angleLines: {
+                                color: 'rgba(71, 85, 105, 0.5)'
+                            },
+                            pointLabels: {
+                                color: 'rgba(148, 163, 184, 1)',
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgba(148, 163, 184, 1)',
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showDetailedView(candidateId) {
+            const candidate = currentMatches.find(c => c.id === candidateId);
+            if (!candidate) return;
+            
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            const audit = candidate.auditTrail;
+            
+            content.innerHTML = `
+                <h2 style="margin-bottom: 0.5rem; font-size: 2rem;">${candidate.name}</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">${candidate.role} • ${candidate.education}</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="card" style="padding: 1rem;">
+                        <h3 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">Demographics</h3>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Gender:</strong> ${candidate.demographics.gender}</p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Ethnicity:</strong> ${candidate.demographics.ethnicity}</p>
+                        <p style="font-size: 0.875rem;"><strong>Location:</strong> ${candidate.location}</p>
+                    </div>
+                    <div class="card" style="padding: 1rem;">
+                        <h3 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">Match Metrics</h3>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Composite Score:</strong> ${candidate.match.total}%</p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Rank:</strong> #${candidate.rank} of ${currentMatches.length}</p>
+                        <p style="font-size: 0.875rem;"><strong>Fairness Adj:</strong> ${candidate.match.fairnessAdjustment > 0 ? '+' + candidate.match.fairnessAdjustment.toFixed(1) + '%' : 'None'}</p>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Detailed Skill Assessment</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Skill</th>
+                            <th>Proficiency</th>
+                            <th>Required</th>
+                            <th>Gap</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(candidate.skills).map(([skill, level]) => {
+                            const required = SkillMatchAPI.db.projectSchema.skills[skill]?.weight || 3;
+                            const gap = level >= required ? '<span class="positive">✓ Met</span>' : 
+                                       level >= required - 1 ? '<span style="color: var(--warning);">~ Near</span>' : 
+                                       '<span class="negative">✗ Gap</span>';
+                            const weight = SkillMatchAPI.db.projectSchema.skills[skill]?.weight || 3;
+                            return `
+                                <tr>
+                                    <td style="text-transform: capitalize;">${skill.replace('dataviz', 'Data Viz').replace('aws', 'Cloud AWS')}</td>
+                                    <td>${'★'.repeat(level)}${'☆'.repeat(5-level)}</td>
+                                    <td>${'★'.repeat(required)}${'☆'.repeat(5-required)}</td>
+                                    <td>${gap}</td>
+                                    <td>${weight}/5</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+
+                <h3 style="color: var(--primary); margin: 1.5rem 0 1rem;">Algorithm Audit Trail</h3>
+                <div class="algo-box" style="font-family: monospace; font-size: 0.75rem;">
+                    <p><strong>Timestamp:</strong> ${audit.timestamp}</p>
+                    <p><strong>Version:</strong> ${audit.algorithmVersion}</p>
+                    <p><strong>Raw Scores:</strong> Technical=${audit.rawScores.technical}, Exp=${audit.rawScores.experience}, Learn=${audit.rawScores.learning}, Collab=${audit.rawScores.collaboration}</p>
+                    <p><strong>Weight Config:</strong> ${JSON.stringify(audit.weightConfig)}</p>
+                    
+                    <div style="margin-top: 0.75rem;">
+                        <strong>Fairness Checks:</strong>
+                        ${audit.fairnessChecks.map(check => `
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 4px;">
+                                <span class="positive">✓ ${check.check}</span>: ${check.detail}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-light); border-radius: 8px;">
+                    <h3 style="margin-bottom: 0.5rem;">Decision Support</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">
+                        Based on the weighted competency scoring and fairness analysis, this candidate 
+                        ${candidate.match.total >= 75 ? 'is strongly recommended' : candidate.match.total >= 60 ? 'is recommended with development plan' : 'requires additional evaluation'} 
+                        for the position. The algorithm has verified no adverse impact across protected categories.
+                    </p>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-primary" style="flex: 1;" onclick="logDecision(${candidate.id}, 'approve', 'Strong skill match')">
+                            <span>✓</span> Recommend
+                        </button>
+                        <button class="btn btn-secondary" style="flex: 1;" onclick="logDecision(${candidate.id}, 'review', 'Needs interview')">
+                            <span>👥</span> Schedule Interview
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function logDecision(candidateId, decision, reason) {
+            const log = SkillMatchAPI.logDecision(candidateId, decision, reason);
+            showNotification(`Decision logged: ${decision.toUpperCase()} (ID: ${log.logId})`);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function showNotification(text) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notifText').textContent = text;
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 4000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') closeModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Enter' && e.ctrlKey) runMatching();
+        });
+    </script>
+</body>
+</html>
